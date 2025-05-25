@@ -1,24 +1,34 @@
 module Main where
 
+import Control.Applicative (asum)
 import Data.List (stripPrefix)
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
 
-test :: String
-test = "xxmul(2,4)%"
+data Token = Do | Dont | Mul Int Int deriving (Show, Eq)
 
-readMuls :: String -> [(Int, Int)]
-readMuls = go []
+readTokens :: String -> [Token]
+readTokens = go []
   where
-    go acc [] = acc
-    go acc (c : cs)
-      | c == 'm' = case readMul (c : cs) of
-          Just ((a, b), rest) -> go ((a, b) : acc) rest
-          Nothing -> go acc cs
-      | otherwise = go acc cs
+    go acc [] = reverse acc
+    go acc (c : cs) = case readAction (c : cs) of
+      Just (action, suffix) -> go (action : acc) suffix
+      Nothing -> go acc cs
 
--- readMul takes mul(a,b)xyz and returns ((a,b), "xyz") and Nothing otherwise
-readMul :: String -> Maybe ((Int, Int), String)
+readAction :: String -> Maybe (Token, String)
+readAction s = asum [readDo s, readDont s, readMul s]
+
+readDo :: String -> Maybe (Token, String)
+readDo s = do
+  after <- stripPrefix "do()" s
+  return (Do, after)
+
+readDont :: String -> Maybe (Token, String)
+readDont s = do
+  after <- stripPrefix "don't()" s
+  return (Dont, after)
+
+readMul :: String -> Maybe (Token, String)
 readMul s = do
   afterMul <- stripPrefix "mul(" s
   let (aStr, afterA) = span (/= ',') afterMul
@@ -27,10 +37,28 @@ readMul s = do
   suffix <- stripPrefix ")" afterB
   a <- readMaybe aStr
   b <- readMaybe bStr
-  return ((a, b), suffix)
+  return (Mul a b, suffix)
+
+parseTokens :: [Token] -> [Token]
+parseTokens = go True
+  where
+    go _ [] = []
+    go accepting (x : xs) =
+      case x of
+        Do -> go True xs
+        Dont -> go False xs
+        Mul a b
+          | accepting -> Mul a b : go accepting xs
+          | otherwise -> go accepting xs
+
+mulsToTuples :: [Token] -> [(Int, Int)]
+mulsToTuples xs = [(a, b) | Mul a b <- xs]
+
+sumOfProducts :: [(Int, Int)] -> Int
+sumOfProducts = sum . map (uncurry (*))
 
 solve :: String -> Int
-solve = sum . map (uncurry (*)) . readMuls
+solve = sumOfProducts . mulsToTuples . parseTokens . readTokens
 
 main :: IO ()
 main = do
