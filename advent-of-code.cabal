@@ -18,6 +18,7 @@ executable day1
   build-depends:
       base
     , unordered-containers
+    , hashable
   default-language: Haskell2010
 
 executable day2
@@ -28,4 +29,5 @@ executable day2
   build-depends:
       base
     , unordered-containers
+    , hashable
   default-language: Haskell2010
