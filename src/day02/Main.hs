@@ -11,8 +11,8 @@ decreasing input = all (uncurry (>)) (withPrevious input)
 increasing :: (Ord a) => [a] -> Bool
 increasing input = all (uncurry (<)) (withPrevious input)
 
-safe :: (Num a, Ord a) => [a] -> Bool
-safe input = all (\(x, y) -> 0 < abs (x - y) && abs (x - y) < 4) (withPrevious input)
+smallDiff :: (Num a, Ord a) => [a] -> Bool
+smallDiff input = all (\(x, y) -> 0 < abs (x - y) && abs (x - y) < 4) (withPrevious input)
 
 readInput :: String -> IO [[Int]]
 readInput path = do
@@ -22,11 +22,20 @@ readInput path = do
 parseLine :: String -> [Int]
 parseLine = map read . words
 
-valid :: (Num a, Ord a) => [a] -> Bool
-valid l = safe l && (decreasing l || increasing l)
+safe :: (Num a, Ord a) => [a] -> Bool
+safe l = smallDiff l && (decreasing l || increasing l)
+
+removeEach :: [a] -> [[a]]
+removeEach xs = [take i xs ++ drop (i + 1) xs | i <- [0 .. length xs - 1]]
+
+tolerantSafe :: (Num a, Ord a) => [a] -> Bool
+tolerantSafe l = any safe (removeEach l)
 
 solve :: [[Int]] -> Int
-solve = length . filter valid
+solve = length . filter safe
+
+solveTwo :: [[Int]] -> Int
+solveTwo = length . filter tolerantSafe
 
 main :: IO ()
 main = do
@@ -35,4 +44,5 @@ main = do
     [path] -> do
       reports <- readInput path
       print $ solve reports
+      print $ solveTwo reports
     _ -> putStrLn "Please provide input file"
