@@ -49,3 +49,12 @@ executable day4
   build-depends:
       base
   default-language: Haskell2010
+
+executable day5
+  main-is: Main.hs
+  hs-source-dirs:
+      src/day05
+  ghc-options: -Wall
+  build-depends:
+      base
+  default-language: Haskell2010
