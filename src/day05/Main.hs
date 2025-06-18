@@ -1,6 +1,6 @@
 module Main where
 
-import GHC.Event (updateTimeout)
+import Data.List (intersect)
 import System.Environment (getArgs)
 
 type Page = Int
@@ -43,16 +43,24 @@ solve s = sum (map middle (validUpdates updates rules))
   where
     (rules, updates) = tokenise s
 
+-- Update this to return the Rule it breaks
 valid :: Update -> [Rule] -> Bool
-valid update rules = go update []
+valid update rules = null (rulesBroken update rules)
+
+rulesBroken :: Update -> [Rule] -> [Rule]
+rulesBroken update rules = go update [] []
   where
-    go [] _ = True
-    go (u : us) prev
-      | anyCommon (map (\x -> (u, x)) prev) rules = False
-      | otherwise = go us (u : prev)
+    go [] _ brokenRules = brokenRules
+    go (u : us) prev brokenRules = go us (u : prev) brokenRules ++ newBrokenRules
+      where
+        prevRuleSet = map (\x -> (u, x)) prev
+        newBrokenRules = prevRuleSet `intersect` rules
 
 validUpdates :: [Update] -> [Rule] -> [Update]
 validUpdates updates rules = [u | u <- updates, valid u rules]
+
+invalidUpdates :: [Update] -> [Rule] -> [Update]
+invalidUpdates updates rules = [u | u <- updates, not (valid u rules)]
 
 middle :: [a] -> a
 middle xs = xs !! mid
@@ -60,9 +68,22 @@ middle xs = xs !! mid
     len = length xs
     mid = div len 2
 
--- Use a Set
 anyCommon :: (Eq a) => [a] -> [a] -> Bool
 anyCommon xs ys = any (`elem` ys) xs
+
+-- insertUpdate inserts the page into the update while respecting the rules
+insertUpdate :: [Rule] -> Update -> Page -> Update
+insertUpdate rules xs x =
+  let idx = length $ takeWhile (\v -> (x, v) `notElem` rules) xs
+   in take idx xs ++ [x] ++ drop idx xs
+
+fixUpdate :: Update -> [Rule] -> Update
+fixUpdate update rules = foldl (insertUpdate rules) [] update
+
+solvePartTwo :: [Update] -> [Rule] -> Int
+solvePartTwo updates rules =
+  let fixedRules = map (`fixUpdate` rules) (invalidUpdates updates rules)
+   in sum (map middle fixedRules)
 
 main :: IO ()
 main = do
@@ -70,5 +91,6 @@ main = do
   case args of
     [path] -> do
       contents <- readFile path
-      print $ solve contents
+      let (rules, updates) = tokenise contents
+      print $ solvePartTwo updates rules
     _ -> print "Please provide an input file"
