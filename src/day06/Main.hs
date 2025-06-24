@@ -45,9 +45,11 @@ solve :: String -> Maybe Int
 solve s = do
   let m = parse s
   (start, Guard dir) <- findInMap isGuard m
-  let c = walk m start dir
-  let size = Set.size c
-  return size
+  let c = map fst $ walk m start dir
+  return (length (dedup c))
+
+dedup :: (Ord a) => [a] -> [a]
+dedup xs = Set.toList (Set.fromList xs)
 
 shiftDir :: Direction -> Direction
 shiftDir U = R
@@ -61,30 +63,30 @@ move (y, x) L = (y, x - 1)
 move (y, x) R = (y, x + 1)
 move (y, x) D = (y + 1, x)
 
-walk :: Map -> Position -> Direction -> Set.Set Position
-walk m = go Set.empty
+walk :: Map -> Position -> Direction -> [(Position, Direction)]
+walk m = go []
   where
-    go :: Set.Set Position -> Position -> Direction -> Set.Set Position
+    go :: [(Position, Direction)] -> Position -> Direction -> [(Position, Direction)]
     go s pos dir
       | not (inRange (bounds m) pos) = s
-      | move pos dir `elem` obstacles m = go s pos (shiftDir dir)
-      | otherwise = go (Set.insert pos s) (move pos dir) dir
+      | not (inRange (bounds m) next) = s
+      | next `elem` obstacles m = go ((pos, shiftDir dir) : s) pos (shiftDir dir) -- Next is blocked, so keep turning right
+      | otherwise = go ((next, dir) : s) (move pos dir) dir
+      where
+        next = move pos dir
 
-isLoop :: Map -> Position -> Direction -> Bool
-isLoop m start startD = go start startD Set.empty
+isLoop :: (Eq a) => [a] -> Bool
+isLoop a = go a a
   where
-    go pos dir visited
-      | Set.member (pos, dir) visited = True
-      | not (inRange (bounds m) pos) = False
-      | move pos dir `elem` obstacles m = go pos (shiftDir dir) (Set.insert (pos, dir) visited)
-      | otherwise = go (move pos dir) dir (Set.insert (pos, dir) visited)
+    go (x : xs) (_ : y : ys) = x == y || go xs ys
+    go _ _ = False
 
 solvePartTwo :: String -> Maybe Int
 solvePartTwo s = do
   let m = parse s
   (start, Guard dir) <- findInMap isGuard m
-  let candidates = Set.delete start (walk m start dir)
-  let options = [pos | pos <- Set.toList candidates, isLoop (m // [(pos, Hash)]) start dir]
+  let c = map fst $ walk m start dir
+  let options = [pos | pos <- c, isLoop $ walk (m // [(pos, Hash)]) start dir]
   return (length options)
 
 main :: IO ()
