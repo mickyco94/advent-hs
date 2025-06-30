@@ -3,7 +3,7 @@
 module Main where
 
 import Data.Array
-import Data.List (nub, tails)
+import Data.List (nub, sort, tails)
 import System.Environment (getArgs)
 
 -- ............
@@ -80,10 +80,25 @@ positions :: Map -> [Position]
 positions m =
   [(i, j) | ((i, j), c) <- concatMap antinodes (pairedAntennas m), inRange (bounds m) (i, j), m ! (i, j) /= c]
 
--- Maybe I actually want to go in every direction...?
 antinodes :: (Position, Position, Char) -> [(Position, Char)]
-antinodes (a, b, c) = [(add b dxdy, c), (add a (neg dxdy), c)] -- But then they are going to contain a and b
+antinodes (a, b, c) = [(add b dxdy, c), (add a (neg dxdy), c)]
   where
+    dxdy = vec a b
+
+positionsOnLines :: Map -> [Position]
+positionsOnLines m =
+  [ (i, j)
+    | ((i, j), c) <- concatMap (\t -> line t (bounds m)) (pairedAntennas m),
+      inRange (bounds m) (i, j)
+  ]
+
+line :: (Position, Position, Char) -> ((Int, Int), (Int, Int)) -> [(Position, Char)]
+line (a, b, c) boun = posWithC ++ negWithC
+  where
+    negWithC = map (,c) negLine
+    posWithC = map (,c) posLine
+    negLine = takeWhile (inRange boun) (iterate (add (neg dxdy)) a)
+    posLine = takeWhile (inRange boun) (iterate (add dxdy) b)
     dxdy = vec a b
 
 draw :: Map -> String
@@ -96,6 +111,11 @@ solve s =
   let m = parse s
    in length (nub (positions m))
 
+solvePartTwo :: String -> Int
+solvePartTwo s =
+  let m = parse s
+   in length (nub (positionsOnLines m))
+
 place :: Map -> Position -> Char -> Map
 place m p c = m // [(p, c)]
 
@@ -107,10 +127,11 @@ placeMany m ps c = m // placements
 withAnti :: Map -> Map
 withAnti m = placeMany m (positions m) '#'
 
+withAntiLines :: Map -> Map
+withAntiLines m = placeMany m (positionsOnLines m) '#'
+
 main :: IO ()
 main = do
   raw <- readInput
-  let m = parse raw
-  putStrLn $ draw m
-  putStrLn $ draw (withAnti m)
+  print $ solvePartTwo raw
   print $ solve raw
