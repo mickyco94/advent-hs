@@ -5,10 +5,8 @@ import System.Environment (getArgs)
 
 type Page = Int
 
--- A|B
 type Rule = (Page, Page)
 
--- A,B,C
 type Update = [Page]
 
 data Token = Rule | Update
