@@ -2,7 +2,7 @@ module Main where
 
 import Data.List (stripPrefix)
 import Data.List.Split (splitOn)
-import Data.Maybe ( mapMaybe)
+import Data.Maybe (mapMaybe)
 
 type Button = (String, Integer, Integer)
 
@@ -44,10 +44,8 @@ parseMachine s = do
 parse :: String -> [Machine]
 parse s = mapMaybe parseMachine (splitOn "\n\n" s)
 
-minTokens' :: Machine -> Integer
-minTokens' ((_, aX, aY), (_, bX, bY), (pX, pY))
-  | n > 100 || m > 100 = 0
-  | otherwise = n * 3 + m
+minTokens :: Machine -> Integer
+minTokens ((_, aX, aY), (_, bX, bY), (pX, pY)) = n * 3 + m
   where
     (n, m) = sim (aX, aY, bX, bY, pX, pY)
 
@@ -66,11 +64,17 @@ sim (ax, ay, bx, by, x, y)
     detM = ax * y - ay * x
 
 solve :: String -> Integer
-solve s = sum (map minTokens' machines)
+solve s = sum (map minTokens machines)
   where
     machines = parse s
+
+offset :: Machine -> Integer -> Machine
+offset (a, b, (pX, pY)) amt = (a, b, (pX + amt, pY + amt))
 
 main :: IO ()
 main = do
   contents <- readFile "input.txt"
-  print $ solve contents
+  let machines = parse contents
+  let offSetMachines = map (`offset` 10000000000000) machines
+  print $ sum (map minTokens machines)
+  print $ sum (map minTokens offSetMachines)
