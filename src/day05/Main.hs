@@ -69,7 +69,10 @@ middle xs = xs !! mid
 anyCommon :: (Eq a) => [a] -> [a] -> Bool
 anyCommon xs ys = any (`elem` ys) xs
 
--- insertUpdate inserts the page into the update while respecting the rules
+-- | 'insertUpdate' inserts the page into the update while respecting the rules
+--
+-- Example:
+-- >>> insertUpdate 
 insertUpdate :: [Rule] -> Update -> Page -> Update
 insertUpdate rules xs x =
   let idx = length $ takeWhile (\v -> (x, v) `notElem` rules) xs

@@ -59,12 +59,7 @@ step :: Map -> Position -> Set.Set Position -> [Position]
 step m p visited = [n | n <- neighbours p, inRange (bounds m) n, not (Set.member n visited)]
 
 -- fill returns a list of positions reachable from the start position
-fill :: Map -> Position -> [Position]
-fill m start = go start Set.empty
-  where go p seen 
-    | length next == 0 = Set.toList seen
-   where next = stepInRegion m p 
-  
+
 
 main :: IO ()
 main = do

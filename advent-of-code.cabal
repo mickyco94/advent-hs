@@ -128,5 +128,5 @@ executable day13
       src/day13
   ghc-options: -Wall
   build-depends:
-      base, containers, array 
+      base, containers, array, split
   default-language: Haskell2010
