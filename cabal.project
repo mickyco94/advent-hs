@@ -1,0 +1,6 @@
+package *
+  ghc-options: -haddock
+
+packages:
+  common/common.cabal
+  advent/advent.cabal

@@ -1,0 +1,120 @@
+cabal-version:      3.0
+name:               advent
+version:            0.1.0.0
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             mickyco94
+maintainer:         mickyclerkinoliver@gmail.com
+category:           Game
+build-type:         Simple
+
+common warnings
+    ghc-options: -Wall
+
+common solution
+    ghc-options: -Wall
+    build-depends:    
+      common, 
+      base ^>=4.18.3.0,
+      hashable,
+      unordered-containers,
+      containers,
+      array
+    default-language: Haskell2010
+
+executable advent
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:    common, base ^>=4.18.3.0
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable day01
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day01
+
+executable day02
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day02
+
+executable day03
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day03
+
+executable day04
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day04
+
+executable day05
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day05
+
+executable day06
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day06
+
+executable day07
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day07
+
+executable day08
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day08
+
+executable day09
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day09
+
+executable day10
+    import:           solution
+    main-is:          Main.hs
+    hs-source-dirs:
+      src/day10
+
+executable day11
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day11
+
+executable day12
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day12
+
+executable day13
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day13
+
+executable day14
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day14
+
+executable day15
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day15

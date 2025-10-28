@@ -1,6 +1,5 @@
 module Main where
 
-import Data.List (find, sort)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.Void (Void)
