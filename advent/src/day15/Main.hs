@@ -1,7 +1,7 @@
 module Main where
 
 import Data.Array
-import MyLib (Parser, lexeme, input)
+import MyLib (Parser, input, lexeme)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 
@@ -50,19 +50,20 @@ parser = do
   g <- grid
   m <- moves
   return (g, m)
-
 -- | move applies the move to a Grid, returning an updated grid
 move :: Grid -> Char -> Grid
 move g d
   | g ! next start == '#' = g
-  | g ! next start == 'O' && null boxes = g
-  | otherwise = g // updates
+  | blocked && null boxes = g
+  | otherwise = g // cleared  // robotMoves // boxes
   where
+    blocked = g ! next start `elem` "#[]O"
     start = robot g
     next p = step p d
     robotMoves = [(start, '.'), (next start, '@')]
-    boxes = [(next p, 'O') | p <- pushed g start d]
-    updates = boxes ++ robotMoves
+    affected = pushed' g (next start) d
+    cleared = [(p, '.') | p <- affected]
+    boxes = [(next p, v) | p <- affected, let v = g ! p]
 
 -- | step updates the position based on the direction
 step :: Position -> Char -> Position
@@ -80,21 +81,52 @@ pushed :: Grid -> Position -> Char -> [Position]
 pushed g start d = go start []
   where
     go :: Position -> [Position] -> [Position]
-    go p acc
+    go p@(y, x) acc
       | not (inRange (bounds g) p) = acc
-      | g ! p == '@' = go (step p d) acc
+      | p `elem` acc = acc
       | g ! p == '.' = acc
-      | g ! p == 'O' = go (step p d) (p : acc)
       | g ! p == '#' = []
+      | g ! p == '@' = go (step p d) acc
+      | g ! p == 'O' = go (step p d) (p : acc)
+      | g ! p == '[' = go (step p d) (p : acc) ++ go (y, x + 1) (p : acc)
+      | g ! p == ']' = go (step p d) (p : acc) ++ go (y, x - 1) (p : acc)
       | otherwise = error $ "Unexpected grid char" ++ show (g ! p)
+
+pushed' :: Grid -> Position -> Char -> [Position]
+pushed' g start d = go [start] []
+  where
+    go [] [] = []
+    go [] acc = acc -- Search done
+    go (p@(y, x) : xs) acc
+      | not (inRange (bounds g) p) = go xs acc
+      | p `elem` acc = go xs acc
+      | g ! p == '#' = []
+      | g ! p == 'O' = go (step p d : xs) (p : acc) -- Add the current
+      | g ! p == '[' = go ([(y, x + 1), step p d] ++ xs) (p : acc) -- Add the neighbour
+      | g ! p == ']' = go ([(y, x - 1), step p d] ++ xs) (p : acc)
+      | otherwise = go xs acc -- Keep searching
 
 robot :: Grid -> Position
 robot g = head [p | (p, c) <- assocs g, c == '@']
 
 gps :: Grid -> Int
-gps g = sum [100 * y + x | ((y, x), 'O') <- assocs g]
+gps g = sum [100 * y + x | ((y, x), v) <- assocs g, v `elem` "[O"]
+
+enlarge :: Grid -> Grid
+enlarge g =
+  let ((sy, sx), (ey, ex)) = bounds g
+      rows = [[g ! (y, x) | x <- [sx .. ex]] | y <- [sy .. ey]]
+      enlargedRows = map (concatMap enlargeCell) rows
+      newEx = sx + length (head enlargedRows) - 1
+   in listArray ((sy, sx), (ey, newEx)) (concat enlargedRows)
+
+enlargeCell :: Char -> String
+enlargeCell 'O' = "[]"
+enlargeCell '@' = "@."
+enlargeCell v = [v, v]
 
 main :: IO ()
 main = do
   (g, m) <- input 2024 15 parser
   print (gps (foldl move g m))
+  print (gps (foldl move (enlarge g) m))
