@@ -19,7 +19,8 @@ common solution
       hashable,
       unordered-containers,
       containers,
-      array
+      array,
+      megaparsec
     default-language: Haskell2010
 
 executable advent
