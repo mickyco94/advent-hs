@@ -9,7 +9,7 @@ category:           Game
 build-type:         Simple
 
 library
-    exposed-modules:  MyLib
+    exposed-modules:  MyLib, Pos
     build-depends:    
       base ^>= 4.18.3.0,
       megaparsec,
