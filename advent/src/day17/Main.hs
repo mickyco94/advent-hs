@@ -70,7 +70,7 @@ findMin p = case go 1 [0] of
       | otherwise = go (n + 1) candidates'
       where
         runout a = output (run p {regA = a})
-        instructionTail = takeLast n (instructions p) 
+        instructionTail = takeLast n (instructions p)
         candidates' = [a' | a <- candidates, i <- [0 .. 8], let a' = shiftOctal a + i, instructionTail == runout a']
 
 shiftOctal :: Int -> Int

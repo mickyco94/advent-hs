@@ -3,7 +3,7 @@ module MyLib where
 import Data.Void (Void)
 import System.Environment (getArgs)
 import Text.Megaparsec (Parsec, errorBundlePretty, parse, empty)
-import Text.Megaparsec.Char (space, space1)
+import Text.Megaparsec.Char (space, space1, char)
 import Text.Printf (printf)
 import qualified Text.Megaparsec.Char.Lexer as L
 
@@ -34,5 +34,12 @@ symbol = L.symbol spaceConsumer
 
 integer :: Parser Int
 integer = L.signed spaceConsumer L.decimal
+
+tuple :: Parser (Int, Int)
+tuple = do
+  a <- integer
+  _ <- char ','
+  b <- integer
+  return (a, b)
 
 

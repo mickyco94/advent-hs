@@ -132,3 +132,8 @@ executable day17
     hs-source-dirs:
       src/day17
 
+executable day18
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/day18
