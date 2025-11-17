@@ -47,16 +47,16 @@ minPath bytes = go [(start, 0)] Map.empty
 
 firstBlock :: [Position] -> Maybe Position
 firstBlock ps = safeHead paths
-  where 
-    pow = [ (take n ps, ps !! (n-1)) | n <- [1..length ps]]
-    paths = [p | (bytes, p) <- pow, isNothing (minPath bytes) ]
+  where
+    pow = [(take n ps, ps !! (n - 1)) | n <- [1 .. length ps]]
+    paths = [p | (bytes, p) <- pow, isNothing (minPath bytes)]
 
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
-safeHead (x:_) = Just x
+safeHead (x : _) = Just x
 
 main :: IO ()
 main = do
   positions <- input 2024 18 parser
   print (minPath (take 1024 positions))
-  print (swap <$> firstBlock positions) 
+  print (swap <$> firstBlock positions)

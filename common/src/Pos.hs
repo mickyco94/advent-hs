@@ -31,4 +31,4 @@ right :: Position -> Position
 right = second (+ 1)
 
 neighbours :: Position -> [Position]
-neighbours p = map ($ p) [right, down,left,up]
+neighbours p = map ($ p) [right, down, left, up]
