@@ -155,3 +155,9 @@ executable 2024_day21
     main-is: Main.hs
     hs-source-dirs:
       src/2024/21
+
+executable 2025_day01
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/2025/01
