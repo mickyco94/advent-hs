@@ -30,128 +30,128 @@ executable advent
     hs-source-dirs:   src
     default-language: Haskell2010
 
-executable day01
+executable 2024_day01
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day01
+      src/2024/01
 
-executable day02
+executable 2024_day02
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day02
+      src/2024/02
 
-executable day03
+executable 2024_day03
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day03
+      src/2024/03
 
-executable day04
+executable 2024_day04
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day04
+      src/2024/04
 
-executable day05
+executable 2024_day05
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day05
+      src/2024/05
 
-executable day06
+executable 2024_day06
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day06
+      src/2024/06
 
-executable day07
+executable 2024_day07
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day07
+      src/2024/07
 
-executable day08
+executable 2024_day08
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day08
+      src/2024/08
 
-executable day09
+executable 2024_day09
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day09
+      src/2024/09
 
-executable day10
+executable 2024_day10
     import:           solution
     main-is:          Main.hs
     hs-source-dirs:
-      src/day10
+      src/2024/10
 
-executable day11
+executable 2024_day11
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day11
+      src/2024/11
 
-executable day12
+executable 2024_day12
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day12
+      src/2024/12
 
-executable day13
+executable 2024_day13
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day13
+      src/2024/13
 
-executable day14
+executable 2024_day14
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day14
+      src/2024/14
 
-executable day15
+executable 2024_day15
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day15
+      src/2024/15
 
-executable day16
+executable 2024_day16
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day16
+      src/2024/16
 
-executable day17
+executable 2024_day17
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day17
+      src/2024/17
 
-executable day18
+executable 2024_day18
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day18
+      src/2024/18
 
-executable day19
+executable 2024_day19
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day19
+      src/2024/19
 
-executable day20
+executable 2024_day20
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day20
+      src/2024/20
 
-executable day21
+executable 2024_day21
     import: solution
     main-is: Main.hs
     hs-source-dirs:
-      src/day21
+      src/2024/21
