@@ -33,3 +33,18 @@ right = second (+ 1)
 neighbours :: Position -> [Position]
 neighbours p = map ($ p) [right, down, left, up]
 
+-- | moore returns the moore neighbours of radius 1
+-- | https://en.wikipedia.org/wiki/Moore_neighborhood
+moore :: Position -> [Position]
+moore p =
+  map
+    ($ p)
+    [ right,
+      down,
+      left,
+      up,
+      right . down,
+      left . down,
+      up . left,
+      up . right
+    ]
