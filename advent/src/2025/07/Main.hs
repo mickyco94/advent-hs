@@ -47,7 +47,7 @@ timelines arr = sum [memo ! (r1, c) | c <- [c0 .. c1]]
       | arr ! (y - 1, x) == '^' = fromSides (y, x)
       | otherwise = memo ! (y - 1, x) + fromSides (y, x)
 
-    memo = array (bounds arr) [((y, x), f (y, x)) | (y, x) <- indices arr]
+    memo = array (bounds arr) [(p, f p) | p <- indices arr]
 
 south :: Position -> Position
 south (y, x) = (y + 1, x)
@@ -63,3 +63,4 @@ main = do
   arr <- input 2025 7 parser
   print (length (splits arr))
   print (timelines arr)
+
