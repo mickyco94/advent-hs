@@ -2,10 +2,10 @@ module MyLib where
 
 import Data.Void (Void)
 import System.Environment (getArgs)
-import Text.Megaparsec (Parsec, errorBundlePretty, parse, empty)
-import Text.Megaparsec.Char (space, space1, char)
-import Text.Printf (printf)
+import Text.Megaparsec (Parsec, empty, errorBundlePretty, parse)
+import Text.Megaparsec.Char (char, space, space1)
 import qualified Text.Megaparsec.Char.Lexer as L
+import Text.Printf (printf)
 
 type Parser = Parsec Void String
 
@@ -41,5 +41,3 @@ tuple = do
   _ <- char ','
   b <- integer
   return (a, b)
-
-
