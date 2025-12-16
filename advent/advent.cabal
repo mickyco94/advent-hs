@@ -12,7 +12,7 @@ common warnings
     ghc-options: -Wall
 
 common solution
-    ghc-options: -Wall
+    ghc-options: -Wall -Wunused-top-binds -Wunused-local-binds
     build-depends:    
       common, 
       base ^>=4.18.3.0,
@@ -203,3 +203,9 @@ executable 2025_day08
     main-is: Main.hs
     hs-source-dirs:
       src/2025/08
+
+executable 2025_day09
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs:
+      src/2025/09

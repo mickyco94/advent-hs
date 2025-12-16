@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List (find, inits, mapAccumL, sortBy, sortOn)
+import Data.List (sortBy, sortOn)
 import Data.Ord (Down (Down), comparing)
 import qualified Data.Set as Set
 import MyLib (Parser, input, integer)
@@ -56,6 +56,8 @@ flatSet = foldl Set.union Set.empty
 xproduct :: Coord -> Coord -> Int
 xproduct (x, _, _) (x', _, _) = x * x'
 
+-- | folds until some condition is met on the accumulator, returning the element of xs
+-- that yielded that result. This could be rewritten if our step function returned a Maybe
 foldUntil :: (acc -> x -> acc) -> (acc -> Bool) -> acc -> [x] -> Maybe x
 foldUntil _ _ _ [] = Nothing
 foldUntil f p acc (x : xs)
