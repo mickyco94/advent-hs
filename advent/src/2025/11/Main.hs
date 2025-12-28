@@ -6,7 +6,9 @@ import Text.Megaparsec (manyTill, sepBy1, sepEndBy1, some)
 import Text.Megaparsec.Char (char, letterChar, newline)
 import Prelude
 
-parser :: Parser (Map.Map String [String])
+type Graph a = Map.Map a [a]
+
+parser :: Parser (Graph String)
 parser = Map.fromList <$> line `sepEndBy1` newline
   where
     line :: Parser (String, [String])
